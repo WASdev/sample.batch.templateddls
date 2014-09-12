@@ -17,12 +17,12 @@ Persistence templates which are **REQUIRED** for using the Java batch function
 - Apache Derby [batch-derby.ddl](batch-derby.ddl)
 - Oracle [batch-oracle.ddl](batch-oracle.ddl)
 
-## TODO
-- checkpointdata PK for DB2 z/OS
-
 ## References
 
-WLP Beta InfoCenter
+### WLP Beta Knowledge Center links
+* [Batch top-level topics list](http://www.ibm.com/support/knowledgecenter/was_beta_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/twlp_container_batch.html)
+* [Batch persistence config article](http://www.ibm.com/support/knowledgecenter/was_beta_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/rwlp_batch_persistence_config.html)
 
-`wlp_batch_persistence_config.html`
+## TODO
+- checkpointdata PK for DB2 z/OS
 
