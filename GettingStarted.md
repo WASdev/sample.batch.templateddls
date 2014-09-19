@@ -2,8 +2,8 @@
 
 ## Product download links
 
-(Sept. beta announcement)[https://developer.ibm.com/wasdev/2014/09/12/announcing-liberty-profile-september-beta]
-(Download page)[https://developer.ibm.com/wasdev/downloads/liberty-profile-beta]
+[Sept 2014 beta announcement](https://developer.ibm.com/wasdev/2014/09/12/announcing-liberty-profile-september-beta)
+[Download page](https://developer.ibm.com/wasdev/downloads/liberty-profile-beta)
 
 ## WLP Beta Knowledge Center links
 
@@ -17,8 +17,24 @@
 
 ## Samples links
 
-* Our first, very simple sample that executes a batch job right within a servlet
-[sleepybatchlet sample](https://github.com/WASdev/sample.batch.sleepybatchlet)
-* Our first moderately complicated sample which executes a job via our remote dispatch/management interface, using the jbatch utility
-[bonuspayout sample](https://github.com/WASdev/sample.batch.bonuspayout)
+* [sleepybatchlet sample](https://github.com/WASdev/sample.batch.sleepybatchlet) - Our first simple sample that executes a batch job right within a servlet
+* [bonuspayout sample](https://github.com/WASdev/sample.batch.bonuspayout) - Our first moderately complicated sample which executes a job via our remote dispatch/management interface, using the jbatch utility
+
+# Common problems
+
+## Java 7 prereq
+
+Note that the server will start, with Java 6, but the batch-related features/bundles and applications will not
+
+```
+[ERROR   ] CWWKF0001E: A feature definition could not be found for com.ibm.websphere.appserver.javax.interceptor-1.1
+[ERROR   ] CWWKF0032E: The com.ibm.websphere.appserver.javax.ejb-3.2 feature requires a minimum Java runtime environment version of JavaSE 1.7.
+...
+[ERROR   ] CWWKE0702E: Could not resolve module: com.ibm.ws.openwebbeans-impl.1.1.6 [80]
+  Unresolved requirement: Import-Package: javax.interceptor; version="[1.1.0,2.0.0)"
+...
+[AUDIT   ] CWWKZ0012I: The application BonusPayoutControllerEAR was not started.
+[AUDIT   ] CWWKF0011I: The server BonusPayout is ready to run a smarter planet.
+```
+
 
