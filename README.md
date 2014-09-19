@@ -19,6 +19,9 @@ Persistence templates which are **REQUIRED** for using the Java batch function
 
 ## References
 
+### Getting Started links
+[Links here](GettingStarted.md)
+
 ### WLP Beta Knowledge Center links
 * [Batch top-level topics list](http://www.ibm.com/support/knowledgecenter/was_beta_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/twlp_container_batch.html)
 * [Batch persistence config article](http://www.ibm.com/support/knowledgecenter/was_beta_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/rwlp_batch_persistence_config.html)

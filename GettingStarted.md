@@ -2,8 +2,8 @@
 
 ## Product download links
 
-[Sept 2014 beta announcement](https://developer.ibm.com/wasdev/2014/09/12/announcing-liberty-profile-september-beta)
-[Download page](https://developer.ibm.com/wasdev/downloads/liberty-profile-beta)
+* [Sept 2014 beta announcement](https://developer.ibm.com/wasdev/2014/09/12/announcing-liberty-profile-september-beta)
+* [Download page](https://developer.ibm.com/wasdev/downloads/liberty-profile-beta)
 
 ## WLP Beta Knowledge Center links
 
@@ -17,8 +17,10 @@
 
 ## Samples links
 
-* [sleepybatchlet sample](https://github.com/WASdev/sample.batch.sleepybatchlet) - Our first simple sample that executes a batch job right within a servlet
-* [bonuspayout sample](https://github.com/WASdev/sample.batch.bonuspayout) - Our first moderately complicated sample which executes a job via our remote dispatch/management interface, using the jbatch utility
+* [sleepybatchlet sample](https://github.com/WASdev/sample.batch.sleepybatchlet) - Our first very simple sample 
+** This executes a batch job right within a servlet
+* [bonuspayout sample](https://github.com/WASdev/sample.batch.bonuspayout) - Our first moderately complicated sample 
+** This executes a job via our remote dispatch/management interface, using the jbatch utility
 
 # Common problems
 
