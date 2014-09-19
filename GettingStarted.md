@@ -17,10 +17,8 @@
 
 ## Samples links
 
-* [sleepybatchlet sample](https://github.com/WASdev/sample.batch.sleepybatchlet) - Our first very simple sample 
-** This executes a batch job right within a servlet
-* [bonuspayout sample](https://github.com/WASdev/sample.batch.bonuspayout) - Our first moderately complicated sample 
-** This executes a job via our remote dispatch/management interface, using the jbatch utility
+* [sleepybatchlet sample](https://github.com/WASdev/sample.batch.sleepybatchlet) - Our first very simple sample - (Executes a job right within a servlet)
+* [bonuspayout sample](https://github.com/WASdev/sample.batch.bonuspayout) - Our first moderately complicated sample -  (Executes a job using our remote dispatch/management interface, with the **jbatch** utility)
 
 # Common problems
 
