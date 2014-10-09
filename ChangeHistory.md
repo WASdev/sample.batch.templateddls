@@ -11,7 +11,7 @@ None at this time
 ## Other Changes
 
 
-### 2014-Oct-09 - Commit 18311fc99d
+### 2014-Oct-09 - Commit 18311fc99dbefdf40c89630d6c907565e6c80e9d
 
 #### batch-db2-zos.ddl
 
