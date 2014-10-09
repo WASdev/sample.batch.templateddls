@@ -11,7 +11,7 @@ None at this time
 ## Other Changes
 
 
-### 2014-Oct-09 - scottkurz/sample.batch.templateddls@18311fc99dbefdf40c89630d6c907565e6c80e9d
+### 2014-Oct-09 - scottkurz/WASdev/sample.batch.templateddls@18311fc99dbefdf40c89630d6c907565e6c80e9d
 
 #### batch-db2-zos.ddl
 
