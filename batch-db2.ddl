@@ -6,42 +6,120 @@
 -------------------------------------------------------------
 
 -- This script creates the tables on a db2 instance that batch container runtime uses.  
--- First a database must be created
 -- Edit this ddl to provide suitable values for place holder ({databaseName},{schema},{tablePrefix}):
--- 1) Replace {databaseName} with the name of database
--- 2) All instances of {schema} and {tablePrefix} should be substituted with values chosen by the user.
+-- 1. Replace {databaseName} with the name of database
+-- 2. All instances of {schema} and {tablePrefix} should be substituted with values chosen by the user.
 -- The default schema name that the runtime will use JBATCH. Replace {schema} with JBATCH to use the default value
 -- The default table prefix that the runtime will use is "".  Replace {tablePrefix} with "" (empty string) to use default value.
 -- An example of using JBATCH for schema, and no table prefix is
 --  	DROP TABLE JBATCH.JOBSTATUS
 
--- Then the following commands can be issued from DB2 command line processor to create the tables
+-- 3. The following are tablespace defined for individual table, replace with a different 
+--    value if requires.  Customize the parameters for table space creation as appropriate
+-- JBJIDTS : table space for {tablePrefix}JOBINSTANCEDATA table
+-- JBEIDTS : table space for {tablePrefix}EXECUTIONINSTANCEDATA table
+-- JBSIDTS : table space for {tablePrefix}STEPEXECUTIONINSTANCEDATA table
+-- JBJSTTS : table space for {tablePrefix}JOBSTATUS table
+-- JBSSTTS : table space for {tablePrefix}STEPSTATUS table
+-- JBCPDTS : table space for {tablePrefix}CHECKPOINTDATA
+
+-- 4. The sample GRANT command are issued to/from PUBLIC.  Customize with desired auth id(s)
+
+
+-- 5. The following command can be issued from DB2 command line processor to execute the ddl
 --             db2 -tf batch-db2.ddl
+
+--------------------------------------------------
+-- Uncomment if need to drop all existing tables
+--------------------------------------------------
+-- CONNECT TO {databaseName};
+-- SET CURRENT SCHEMA = '{schema}';
+-- DROP TABLE {tablePrefix}JOBSTATUS;
+-- DROP TABLE {tablePrefix}STEPSTATUS;
+-- DROP TABLE {tablePrefix}CHECKPOINTDATA;
+-- DROP TABLE {tablePrefix}JOBINSTANCEDATA;
+-- DROP TABLE {tablePrefix}EXECUTIONINSTANCEDATA;
+-- DROP TABLE {tablePrefix}STEPEXECUTIONINSTANCEDATA;
+
+-- DROP TABLESPACE JBJIDTS;
+-- DROP TABLESPACE JBEIDTS;
+-- DROP TABLESPACE JBSIDTS;
+-- DROP TABLESPACE JBJSTTS;
+-- DROP TABLESPACE JBSSTTS;
+-- DROP TABLESPACE JBCPDTS;
+--------------------------------------------------
+-- Uncomment if need to drop database
+--------------------------------------------------
+-- DROP DATABASE {databaseName};
+CREATE DATABASE {databaseName};
 
 CONNECT TO {databaseName};
 
---------------------------------------------------
--- Uncomment if need to drop all existing tables.
---------------------------------------------------
--- DROP TABLE {schema}.{tablePrefix}JOBSTATUS;
--- DROP TABLE {schema}.{tablePrefix}STEPSTATUS;
--- DROP TABLE {schema}.{tablePrefix}CHECKPOINTDATA;
--- DROP TABLE {schema}.{tablePrefix}JOBINSTANCEDATA;
--- DROP TABLE {schema}.{tablePrefix}EXECUTIONINSTANCEDATA;
--- DROP TABLE {schema}.{tablePrefix}STEPEXECUTIONINSTANCEDATA;
+SET CURRENT SCHEMA = '{schema}';
 
 --------------------------------------------------
+-- Create table spaces
+
+CREATE TABLESPACE JBJIDTS IN DATABASE PARTITION GROUP IBMDEFAULTGROUP
+						PAGESIZE 4096 MANAGED BY AUTOMATIC STORAGE USING STOGROUP IBMSTOGROUP
+						AUTORESIZE YES BUFFERPOOL IBMDEFAULTBP OVERHEAD INHERIT TRANSFERRATE
+						INHERIT DROPPED TABLE RECOVERY ON DATA TAG INHERIT;
+
+GRANT USE OF TABLESPACE JBJIDTS TO PUBLIC;
+
+CREATE TABLESPACE JBEIDTS IN DATABASE PARTITION GROUP IBMDEFAULTGROUP
+						PAGESIZE 4096 MANAGED BY AUTOMATIC STORAGE USING STOGROUP IBMSTOGROUP
+						AUTORESIZE YES BUFFERPOOL IBMDEFAULTBP OVERHEAD INHERIT TRANSFERRATE
+						INHERIT DROPPED TABLE RECOVERY ON DATA TAG INHERIT;
+
+GRANT USE OF TABLESPACE JBEIDTS TO PUBLIC;
+
+CREATE TABLESPACE JBSIDTS IN DATABASE PARTITION GROUP IBMDEFAULTGROUP
+						PAGESIZE 4096 MANAGED BY AUTOMATIC STORAGE USING STOGROUP IBMSTOGROUP
+						AUTORESIZE YES BUFFERPOOL IBMDEFAULTBP OVERHEAD INHERIT TRANSFERRATE
+						INHERIT DROPPED TABLE RECOVERY ON DATA TAG INHERIT;
+						
+GRANT USE OF TABLESPACE JBSIDTS TO PUBLIC;
+
+CREATE TABLESPACE JBJSTTS IN DATABASE PARTITION GROUP IBMDEFAULTGROUP
+						PAGESIZE 4096 MANAGED BY AUTOMATIC STORAGE USING STOGROUP IBMSTOGROUP
+						AUTORESIZE YES BUFFERPOOL IBMDEFAULTBP OVERHEAD INHERIT TRANSFERRATE
+						INHERIT DROPPED TABLE RECOVERY ON DATA TAG INHERIT;
+
+GRANT USE OF TABLESPACE JBJSTTS TO PUBLIC;
+
+CREATE TABLESPACE JBSSTTS IN DATABASE PARTITION GROUP IBMDEFAULTGROUP
+						PAGESIZE 4096 MANAGED BY AUTOMATIC STORAGE USING STOGROUP IBMSTOGROUP
+						AUTORESIZE YES BUFFERPOOL IBMDEFAULTBP OVERHEAD INHERIT TRANSFERRATE
+						INHERIT DROPPED TABLE RECOVERY ON DATA TAG INHERIT;
+
+GRANT USE OF TABLESPACE JBSSTTS TO PUBLIC;
+
+CREATE TABLESPACE JBCPDTS IN DATABASE PARTITION GROUP IBMDEFAULTGROUP
+						PAGESIZE 4096 MANAGED BY AUTOMATIC STORAGE USING STOGROUP IBMSTOGROUP
+						AUTORESIZE YES BUFFERPOOL IBMDEFAULTBP OVERHEAD INHERIT TRANSFERRATE
+						INHERIT DROPPED TABLE RECOVERY ON DATA TAG INHERIT;
+						
+GRANT USE OF TABLESPACE JBCPDTS TO PUBLIC;
+
+--------------------------------------------------
+
 -- Create new tables
 --------------------------------------------------
 
-CREATE TABLE {schema}.{tablePrefix}JOBINSTANCEDATA(
+CREATE TABLE {tablePrefix}JOBINSTANCEDATA(
   jobinstanceid BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) CONSTRAINT {tablePrefix}JOBINSTANCE_PK PRIMARY KEY,
   name		VARCHAR(512), 
   apptag VARCHAR(512),
   appname   VARCHAR(512)
-);
+) IN JBJIDTS INDEX IN JBJIDTS;
 
-CREATE TABLE {schema}.{tablePrefix}EXECUTIONINSTANCEDATA(
+GRANT ALL ON TABLE {tablePrefix}JOBINSTANCEDATA TO PUBLIC;
+
+CREATE UNIQUE INDEX JBI_INDEX ON
+      {tablePrefix}JOBINSTANCEDATA(jobinstanceid);
+      
+CREATE TABLE {tablePrefix}EXECUTIONINSTANCEDATA(
   jobexecid BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) CONSTRAINT {tablePrefix}JOBEXECUTION_PK PRIMARY KEY,
   jobinstanceid BIGINT,
   createtime	TIMESTAMP,
@@ -52,10 +130,20 @@ CREATE TABLE {schema}.{tablePrefix}EXECUTIONINSTANCEDATA(
   batchstatus	VARCHAR(512),
   exitstatus	VARCHAR(512),
   serverId 		VARCHAR(512),
-  CONSTRAINT {tablePrefix}JOBINST_JOBEXEC_FK FOREIGN KEY (jobinstanceid) REFERENCES {schema}.{tablePrefix}JOBINSTANCEDATA (jobinstanceid)
-  );
+  CONSTRAINT {tablePrefix}JOBINST_JOBEXEC_FK FOREIGN KEY (jobinstanceid) REFERENCES {tablePrefix}JOBINSTANCEDATA (jobinstanceid)
+  ) IN JBEIDTS INDEX IN JBEIDTS;
   
-CREATE TABLE {schema}.{tablePrefix}STEPEXECUTIONINSTANCEDATA(
+GRANT ALL ON TABLE {tablePrefix}EXECUTIONINSTANCEDATA TO PUBLIC;
+
+ALTER TABLE {tablePrefix}EXECUTIONINSTANCEDATA VOLATILE;
+
+CREATE UNIQUE INDEX EXI_INDEX ON
+      {tablePrefix}EXECUTIONINSTANCEDATA(jobexecid);
+
+CREATE UNIQUE INDEX JBI_EXI_INDEX ON
+      {tablePrefix}EXECUTIONINSTANCEDATA(jobinstanceid, jobexecid);
+      
+CREATE TABLE {tablePrefix}STEPEXECUTIONINSTANCEDATA(
 	stepexecid BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) CONSTRAINT {tablePrefix}STEPEXECUTION_PK PRIMARY KEY,
 	jobexecid			BIGINT,
 	batchstatus         VARCHAR(512),
@@ -72,25 +160,50 @@ CREATE TABLE {schema}.{tablePrefix}STEPEXECUTIONINSTANCEDATA(
 	startTime           TIMESTAMP,
 	endTime             TIMESTAMP,
 	persistentData		BLOB,
-	CONSTRAINT {tablePrefix}JOBEXEC_STEPEXEC_FK FOREIGN KEY (jobexecid) REFERENCES {schema}.{tablePrefix}EXECUTIONINSTANCEDATA (jobexecid)
-); 
+	CONSTRAINT {tablePrefix}JOBEXEC_STEPEXEC_FK FOREIGN KEY (jobexecid) REFERENCES {tablePrefix}EXECUTIONINSTANCEDATA (jobexecid)
+) IN JBSIDTS INDEX IN JBSIDTS; 
 
-CREATE TABLE {schema}.{tablePrefix}JOBSTATUS (
+GRANT ALL ON TABLE {tablePrefix}STEPEXECUTIONINSTANCEDATA TO PUBLIC;
+
+ALTER TABLE {tablePrefix}STEPEXECUTIONINSTANCEDATA VOLATILE;
+
+CREATE UNIQUE INDEX STP_INDEX ON
+      {tablePrefix}STEPEXECUTIONINSTANCEDATA (stepexecid);
+
+CREATE UNIQUE INDEX EXI_STP_INDEX ON
+      {tablePrefix}STEPEXECUTIONINSTANCEDATA (jobexecid, stepexecid);      
+      
+CREATE TABLE {tablePrefix}JOBSTATUS (
   id BIGINT NOT NULL CONSTRAINT {tablePrefix}JOBSTATUS_PK PRIMARY KEY,
   obj		BLOB,
-  CONSTRAINT {tablePrefix}JOBSTATUS_JOBINST_FK FOREIGN KEY (id) REFERENCES {schema}.{tablePrefix}JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE
-);
+  CONSTRAINT {tablePrefix}JOBSTATUS_JOBINST_FK FOREIGN KEY (id) REFERENCES {tablePrefix}JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE
+) IN JBJSTTS INDEX IN JBJSTTS;
 
-CREATE TABLE {schema}.{tablePrefix}STEPSTATUS(
+GRANT ALL ON TABLE {tablePrefix}JOBSTATUS TO PUBLIC;
+
+CREATE UNIQUE INDEX JS_INDEX ON
+      {tablePrefix}JOBSTATUS (id);
+	  
+CREATE TABLE {tablePrefix}STEPSTATUS(
   id BIGINT NOT NULL CONSTRAINT {tablePrefix}STEPSTATUS_PK PRIMARY KEY,
   obj		BLOB,
-  CONSTRAINT {tablePrefix}STEPSTATUS_STEPEXEC_FK FOREIGN KEY (id) REFERENCES {schema}.{tablePrefix}STEPEXECUTIONINSTANCEDATA (stepexecid) ON DELETE CASCADE
-);
+  CONSTRAINT {tablePrefix}STEPSTATUS_STEPEXEC_FK FOREIGN KEY (id) REFERENCES {tablePrefix}STEPEXECUTIONINSTANCEDATA (stepexecid) ON DELETE CASCADE
+) IN JBSSTTS;
 
-CREATE TABLE {schema}.{tablePrefix}CHECKPOINTDATA(
+GRANT ALL ON TABLE {tablePrefix}STEPSTATUS TO PUBLIC;
+
+CREATE UNIQUE INDEX SS_INDEX ON
+      {tablePrefix}STEPSTATUS (id);
+	  
+CREATE TABLE {tablePrefix}CHECKPOINTDATA(
   id		VARCHAR(512) NOT NULL CONSTRAINT {tablePrefix}CHECKPOINTDATA_PK PRIMARY KEY,
   obj		BLOB
-);
+)IN JBCPDTS INDEX IN JBCPDTS;
+
+GRANT ALL ON TABLE {tablePrefix}CHECKPOINTDATA TO PUBLIC;
+
+CREATE UNIQUE INDEX CHK_INDEX ON
+	  {tablePrefix}CHECKPOINTDATA(id);
 
 COMMIT WORK;
 CONNECT RESET;
