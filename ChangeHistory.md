@@ -13,7 +13,7 @@ None at this time
 
 ### 2014-Oct-09 
 
-[Commit 18311fc99](https://github.com/WASdev/sample.batch.templateddls/18311fc99dbefdf40c89630d6c907565e6c80e9d)
+[Commit 18311fc99](https://github.com/WASdev/sample.batch.templateddls/commit/18311fc99dbefdf40c89630d6c907565e6c80e9d)
 
 #### batch-db2-zos.ddl
 
