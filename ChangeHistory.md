@@ -10,6 +10,13 @@ None at this time
 
 ## Other Changes
 
+### 2014-Oct-23
+
+[Commit 5f8d32610](https://github.com/WASdev/sample.batch.templateddls/commit/5f8d3261015e39f3fecc1b1e329312e567154aab)
+
+1.  Reduce length of Oracle trigger name to allow more room for table prefix.
+
+This should be a non-disruptive change.
 
 ### 2014-Oct-09 
 
