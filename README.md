@@ -24,7 +24,6 @@ See [ChangeHistory.md](ChangeHistory.md) for details.
      
 This is where we would also note when we have made a "breaking" change for which you would need a newer version of the feature code.
 
-
 ## References
 
 ### Getting Started links
