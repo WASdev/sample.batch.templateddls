@@ -76,7 +76,7 @@ CREATE TABLE {tablePrefix}EXECUTIONINSTANCEDATA(
     batchstatus     VARCHAR2(512),
     exitstatus      VARCHAR2(512),
     serverId 		VARCHAR(512),
-	CONSTRAINT {tablePrefix}JOBINST_JOBEXEC_FK FOREIGN KEY (jobinstanceid) REFERENCES {tablePrefix}JOBINSTANCEDATA (jobinstanceid))
+	CONSTRAINT {tablePrefix}JOBINST_JOBEXEC_FK FOREIGN KEY (jobinstanceid) REFERENCES {tablePrefix}JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE)
 TABLESPACE {tablespace};
 
 CREATE SEQUENCE {tablePrefix}EXECUTIONINSTANCEDATA_SEQ;
@@ -106,7 +106,7 @@ CREATE TABLE {tablePrefix}STEPEXECUTIONINSTANCEDATA(
     startTime           TIMESTAMP,
     endTime             TIMESTAMP,
     persistentData      BLOB,
-	CONSTRAINT {tablePrefix}JOBEXEC_STEPEXEC_FK FOREIGN KEY (jobexecid) REFERENCES {tablePrefix}EXECUTIONINSTANCEDATA (jobexecid))
+	CONSTRAINT {tablePrefix}JOBEXEC_STEPEXEC_FK FOREIGN KEY (jobexecid) REFERENCES {tablePrefix}EXECUTIONINSTANCEDATA (jobexecid) ON DELETE CASCADE)
 TABLESPACE {tablespace};
 
 CREATE SEQUENCE {tablePrefix}STEPEXECINSTDATA_SEQ;

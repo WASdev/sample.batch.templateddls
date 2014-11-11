@@ -40,7 +40,7 @@ CREATE TABLE {schema}.{tablePrefix}EXECUTIONINSTANCEDATA(
   batchstatus	VARCHAR(512),
   exitstatus	VARCHAR(512),
   serverId 		VARCHAR(512),
-  CONSTRAINT {schema}.{tablePrefix}JOBINST_JOBEXEC_FK FOREIGN KEY (jobinstanceid) REFERENCES {schema}.{tablePrefix}JOBINSTANCEDATA (jobinstanceid)
+  CONSTRAINT {schema}.{tablePrefix}JOBINST_JOBEXEC_FK FOREIGN KEY (jobinstanceid) REFERENCES {schema}.{tablePrefix}JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE
   );
   
 CREATE TABLE {schema}.{tablePrefix}STEPEXECUTIONINSTANCEDATA(
@@ -60,7 +60,7 @@ CREATE TABLE {schema}.{tablePrefix}STEPEXECUTIONINSTANCEDATA(
 	startTime           TIMESTAMP,
 	endTime             TIMESTAMP,
 	persistentData		BLOB,
-	CONSTRAINT {schema}.{tablePrefix}JOBEXEC_STEPEXEC_FK FOREIGN KEY (jobexecid) REFERENCES {schema}.{tablePrefix}EXECUTIONINSTANCEDATA (jobexecid)
+	CONSTRAINT {schema}.{tablePrefix}JOBEXEC_STEPEXEC_FK FOREIGN KEY (jobexecid) REFERENCES {schema}.{tablePrefix}EXECUTIONINSTANCEDATA (jobexecid) ON DELETE CASCADE
 ); 
 
 CREATE TABLE {schema}.{tablePrefix}JOBSTATUS (
