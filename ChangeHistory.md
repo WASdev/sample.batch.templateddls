@@ -10,6 +10,12 @@ None at this time
 
 ## Other Changes
 
+### 2014-Nov-11
+
+[Commit 464950b](https://github.com/WASdev/sample.batch.templateddls/commit/464950b558cb8b6303380637994adac5b751b004)
+
+1. All DDLs updated to support cascading deletion on foreign key references.
+
 ### 2014-Oct-23
 
 [Commit 5f8d32610](https://github.com/WASdev/sample.batch.templateddls/commit/5f8d3261015e39f3fecc1b1e329312e567154aab)
