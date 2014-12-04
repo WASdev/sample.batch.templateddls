@@ -6,65 +6,53 @@
 -------------------------------------------------------------
 
 
-DROP TABLE JOBSTATUS;
-
-DROP TABLE STEPSTATUS;
-
-DROP TABLE CHECKPOINTDATA;
-
-DROP TABLE JOBINSTANCEDATA;
-
-DROP TABLE EXECUTIONINSTANCEDATA;
-
-DROP TABLE STEPEXECUTIONINSTANCEDATA;
-
-CREATE TABLE JOBINSTANCEDATA(
-  jobinstanceid    BIGINT NOT NULL PRIMARY KEY IDENTITY,
+CREATE TABLE IF NOT EXISTS JOBINSTANCEDATA(
+  jobinstanceid   BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   name    VARCHAR(512), 
   apptag VARCHAR(512),
   appname   VARCHAR(512),
   jobxmlname VARCHAR(512),
   submitter VARCHAR(512),
-  jobxml    VARBINARY
+  jobxml    BLOB
 );
 
-CREATE TABLE EXECUTIONINSTANCEDATA(
-  jobexecid     BIGINT NOT NULL PRIMARY KEY IDENTITY, 
+CREATE TABLE IF NOT EXISTS EXECUTIONINSTANCEDATA(
+  jobexecid     BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   jobinstanceid BIGINT,
-  createtime  DATETIME,
-  starttime   DATETIME,
-  endtime   DATETIME,
-  updatetime  DATETIME,
-  parameters  VARBINARY,
+  createtime  TIMESTAMP,
+  starttime   TIMESTAMP,
+  endtime   TIMESTAMP,
+  updatetime  TIMESTAMP,
+  parameters  BLOB,
   batchstatus   VARCHAR(512),
   exitstatus    VARCHAR(512),
   serverId VARCHAR(512),
   logpath       VARCHAR(512),
   CONSTRAINT JOBINST_JOBEXEC_FK FOREIGN KEY (jobinstanceid) REFERENCES JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE
-);
-
-CREATE TABLE STEPEXECUTIONINSTANCEDATA(
-  stepexecid     BIGINT NOT NULL PRIMARY KEY IDENTITY, 
-  jobexecid      BIGINT, 
-  batchstatus         VARCHAR(512),
-    exitstatus      VARCHAR(512),
-    stepname      VARCHAR(512),
-  readcount           INTEGER,
-  writecount          INTEGER,
-  commitcount         INTEGER,
-  rollbackcount       INTEGER,
-  readskipcount       INTEGER,
-  processskipcount    INTEGER,
-  filtercount         INTEGER,
-  writeskipcount      INTEGER,
-  startTime           DATETIME,
-  endTime             DATETIME,
-  persistentData    VARBINARY,
+  );
+  
+CREATE TABLE IF NOT EXISTS STEPEXECUTIONINSTANCEDATA(
+  stepexecid    BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  jobexecid BIGINT,
+  batchstatus       VARCHAR(512),
+  exitstatus      VARCHAR(512),
+  stepname        VARCHAR(512),
+  readcount         INT,
+  writecount        INT,
+  commitcount       INT,
+  rollbackcount     INT,
+  readskipcount     INT,
+  processskipcount  INT,
+  filtercount       INT,
+  writeskipcount    INT,
+  startTime           TIMESTAMP,
+  endTime             TIMESTAMP,
+  persistentData    BLOB,
   CONSTRAINT JOBEXEC_STEPEXEC_FK FOREIGN KEY (jobexecid) REFERENCES EXECUTIONINSTANCEDATA (jobexecid) ON DELETE CASCADE
 );  
-  
-CREATE TABLE JOBSTATUS (
-  jobinstanceid		BIGINT NOT NULL PRIMARY KEY IDENTITY,
+
+CREATE TABLE IF NOT EXISTS JOBSTATUS (
+  jobinstanceid		BIGINT NOT NULL PRIMARY KEY,
   batchstatus  VARCHAR(512),
   exitstatus   VARCHAR(512),
   latestjobexecid BIGINT,
@@ -74,14 +62,15 @@ CREATE TABLE JOBSTATUS (
   CONSTRAINT JOBSTATUS_JOBEXEC_FK FOREIGN KEY (latestjobexecid) REFERENCES EXECUTIONINSTANCEDATA (jobexecid) ON DELETE CASCADE
 );
 
-CREATE TABLE STEPSTATUS(
-  id		BIGINT NOT NULL PRIMARY KEY IDENTITY,
-  obj		VARBINARY,
+CREATE TABLE IF NOT EXISTS STEPSTATUS(
+  id		BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+  obj   BLOB,
   CONSTRAINT STEPSTATUS_STEPEXEC_FK FOREIGN KEY (id) REFERENCES STEPEXECUTIONINSTANCEDATA (stepexecid) ON DELETE CASCADE
 );
 
-CREATE TABLE CHECKPOINTDATA(
-  id		VARCHAR(512) NOT NULL PRIMARY KEY IDENTITY,
-  obj		VARBINARY
+CREATE TABLE IF NOT EXISTS CHECKPOINTDATA(
+  id		VARCHAR(512) NOT NULL PRIMARY KEY,
+  obj		BLOB
 );
 
+  

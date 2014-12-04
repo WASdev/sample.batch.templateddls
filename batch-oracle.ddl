@@ -52,7 +52,10 @@ CREATE TABLE {tablePrefix}JOBINSTANCEDATA(
 	jobinstanceid               NUMBER(19,0) PRIMARY KEY,
     name                VARCHAR2(512),
     apptag VARCHAR(512),
-  	appname   VARCHAR(512))
+  	appname   VARCHAR(512),
+    jobxmlname VARCHAR(512),
+    submitter VARCHAR(512),
+    jobxml    BLOB)
 TABLESPACE {tablespace};
    
 CREATE SEQUENCE {tablePrefix}JOBINSTANCEDATA_SEQ;
@@ -76,6 +79,7 @@ CREATE TABLE {tablePrefix}EXECUTIONINSTANCEDATA(
     batchstatus     VARCHAR2(512),
     exitstatus      VARCHAR2(512),
     serverId 		VARCHAR(512),
+    logpath         VARCHAR(512),
 	CONSTRAINT {tablePrefix}JOBINST_JOBEXEC_FK FOREIGN KEY (jobinstanceid) REFERENCES {tablePrefix}JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE)
 TABLESPACE {tablespace};
 
@@ -120,9 +124,14 @@ CREATE OR REPLACE TRIGGER {tablePrefix}STEPEXECINSTDATA_TRG
     /
    
 CREATE TABLE {tablePrefix}JOBSTATUS (
-	id     NUMBER(19,0) PRIMARY KEY,
-	obj    BLOB,
-  	CONSTRAINT {tablePrefix}JOBSTATUS_JOBINST_FK FOREIGN KEY (id) REFERENCES {tablePrefix}JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE)
+	jobinstanceid     NUMBER(19,0) PRIMARY KEY,
+    batchstatus  VARCHAR(512),
+    exitstatus   VARCHAR(512),
+    latestjobexecid   NUMBER(19,0),
+    currentstepid VARCHAR(512),
+    restarton VARCHAR(512),
+    CONSTRAINT {tablePrefix}JOBSTATUS_JOBINST_FK FOREIGN KEY (jobinstanceid) REFERENCES {tablePrefix}JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE,
+    CONSTRAINT {tablePrefix}JOBSTATUS_JOBEXEC_FK FOREIGN KEY (latestjobexecid) REFERENCES {tablePrefix}EXECUTIONINSTANCEDATA (jobexecid) ON DELETE CASCADE)
 TABLESPACE {tablespace};
    
 CREATE TABLE {tablePrefix}STEPSTATUS(

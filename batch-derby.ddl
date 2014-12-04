@@ -26,7 +26,10 @@ CREATE TABLE {schema}.{tablePrefix}JOBINSTANCEDATA(
   jobinstanceid BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) CONSTRAINT {schema}.{tablePrefix}JOBINSTANCE_PK PRIMARY KEY,
   name		VARCHAR(512),
   apptag    VARCHAR(512),
-  appname   VARCHAR(512)
+  appname   VARCHAR(512),
+  jobxmlname VARCHAR(512),
+  submitter VARCHAR(512),
+  jobxml    BLOB
 );
 
 CREATE TABLE {schema}.{tablePrefix}EXECUTIONINSTANCEDATA(
@@ -40,6 +43,7 @@ CREATE TABLE {schema}.{tablePrefix}EXECUTIONINSTANCEDATA(
   batchstatus	VARCHAR(512),
   exitstatus	VARCHAR(512),
   serverId 		VARCHAR(512),
+  logpath       VARCHAR(512),
   CONSTRAINT {schema}.{tablePrefix}JOBINST_JOBEXEC_FK FOREIGN KEY (jobinstanceid) REFERENCES {schema}.{tablePrefix}JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE
   );
   
@@ -64,9 +68,14 @@ CREATE TABLE {schema}.{tablePrefix}STEPEXECUTIONINSTANCEDATA(
 ); 
 
 CREATE TABLE {schema}.{tablePrefix}JOBSTATUS (
-  id BIGINT NOT NULL CONSTRAINT {schema}.{tablePrefix}JOBSTATUS_PK PRIMARY KEY,
-  obj		BLOB,
-  CONSTRAINT {schema}.{tablePrefix}JOBSTATUS_JOBINST_FK FOREIGN KEY (id) REFERENCES {schema}.{tablePrefix}JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE
+  jobinstanceid BIGINT NOT NULL CONSTRAINT {schema}.{tablePrefix}JOBSTATUS_PK PRIMARY KEY,
+  batchstatus  VARCHAR(512),
+  exitstatus   VARCHAR(512),
+  latestjobexecid BIGINT,
+  currentstepid VARCHAR(512),
+  restarton VARCHAR(512),
+  CONSTRAINT {schema}.{tablePrefix}JOBSTATUS_JOBINST_FK FOREIGN KEY (jobinstanceid) REFERENCES {schema}.{tablePrefix}JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE,
+  CONSTRAINT {schema}.{tablePrefix}JOBSTATUS_JOBEXEC_FK FOREIGN KEY (latestjobexecid) REFERENCES {schema}.{tablePrefix}EXECUTIONINSTANCEDATA (jobexecid) ON DELETE CASCADE
 );
 
 CREATE TABLE {schema}.{tablePrefix}STEPSTATUS(

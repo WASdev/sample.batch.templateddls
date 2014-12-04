@@ -28,9 +28,9 @@
 --
 -- 9. The following are table space defined for auxilary tables, replace with a different value if required
 --
+-- JBILOBTS : table space for {tablePrefix}JOBINSTANCEDATABLOB table
 -- JBELOBTS : table space for {tablePrefix}EXECUTIONINSTANCEDATABLOB table 
 -- JBXLOBTS : table space for {tablePrefix}STEPEXECUTIONINSTANCEDATABLOB table
--- JBJLOBTS : table space for {tablePrefix}JOBSTATUSBLOB table
 -- JBSLOBTS : table space for {tablePrefix}STEPSTATUSBLOB table
 -- JBCLOBTS : table space for {tablePrefix}CHECKPOINTDATABLOB table
 --
@@ -155,12 +155,12 @@ CREATE LOB TABLESPACE JBXLOBTS IN {databaseName}
 GRANT USE OF TABLESPACE {databaseName}.JBXLOBTS TO PUBLIC;
 
 
-CREATE LOB TABLESPACE JBJLOBTS IN {databaseName}
+CREATE LOB TABLESPACE JBILOBTS IN {databaseName}
    USING STOGROUP {storegroup}
          LOCKSIZE LOB;
 
 
-GRANT USE OF TABLESPACE {databaseName}.JBJLOBTS TO PUBLIC;
+GRANT USE OF TABLESPACE {databaseName}.JBILOBTS TO PUBLIC;
 
 
 CREATE LOB TABLESPACE JBSLOBTS IN {databaseName}
@@ -184,7 +184,10 @@ CREATE TABLE {tablePrefix}JOBINSTANCEDATA(
   WITH 1, INCREMENT BY 1) CONSTRAINT {tablePrefix}JOBINSTANCE_PK PRIMARY KEY,
   name   VARCHAR(512),
   apptag VARCHAR(512),
-  appname VARCHAR(512)
+  appname VARCHAR(512),
+  jobxmlname VARCHAR(512),
+  submitter VARCHAR(512),
+  jobxml    BLOB(1M)
 ) IN {databaseName}.JBJIDTS;
 
 GRANT ALL ON TABLE {tablePrefix}JOBINSTANCEDATA TO PUBLIC;
@@ -192,6 +195,16 @@ GRANT ALL ON TABLE {tablePrefix}JOBINSTANCEDATA TO PUBLIC;
 CREATE UNIQUE INDEX JBI_INDEX ON
       {tablePrefix}JOBINSTANCEDATA(jobinstanceid)
       USING STOGROUP {storegroup}
+      PRIQTY 720
+      SECQTY -1
+      BUFFERPOOL {bufferpoolindex};
+
+CREATE AUXILIARY TABLE {tablePrefix}JOBINSTANCEDATABLOB
+       IN {databaseName}.JBILOBTS
+       STORES {tablePrefix}JOBINSTANCEDATA COLUMN jobxml;
+
+CREATE UNIQUE INDEX JBILINDX ON {tablePrefix}JOBINSTANCEDATABLOB
+   USING STOGROUP {storegroup}
       PRIQTY 720
       SECQTY -1
       BUFFERPOOL {bufferpoolindex};
@@ -209,6 +222,7 @@ CREATE TABLE {tablePrefix}EXECUTIONINSTANCEDATA(
   batchstatus   VARCHAR(512),
   exitstatus    VARCHAR(512),
   serverId      VARCHAR(512),
+  logpath       VARCHAR(512),
   CONSTRAINT {tablePrefix}JOBINST_JOBEXEC_FK FOREIGN KEY (jobinstanceid) REFERENCES
   {tablePrefix}JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE
 ) IN {databaseName}.JBEIDTS;
@@ -292,28 +306,21 @@ CREATE UNIQUE INDEX JBXLINDX ON
       BUFFERPOOL {bufferpoolindex};
 
 CREATE TABLE {tablePrefix}JOBSTATUS (
-  id     BIGINT NOT NULL CONSTRAINT {tablePrefix}JOBSTATUS_PK PRIMARY KEY,
-  obj    BLOB(1M),
-  CONSTRAINT {tablePrefix}JOBSTATUS_JOBINST_FK FOREIGN KEY (id) REFERENCES
-  {tablePrefix}JOBINSTANCEDATA
-  (jobinstanceid) ON DELETE CASCADE
+  jobinstanceid     BIGINT NOT NULL CONSTRAINT {tablePrefix}JOBSTATUS_PK PRIMARY KEY,
+  batchstatus  VARCHAR(512),
+  exitstatus   VARCHAR(512),
+  latestjobexecid BIGINT,
+  currentstepid VARCHAR(512),
+  restarton VARCHAR(512),
+  CONSTRAINT {tablePrefix}JOBSTATUS_JOBINST_FK FOREIGN KEY (jobinstanceid) REFERENCES {tablePrefix}JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE,
+  CONSTRAINT {tablePrefix}JOBSTATUS_JOBEXEC_FK FOREIGN KEY (latestjobexecid) REFERENCES {tablePrefix}EXECUTIONINSTANCEDATA (jobexecid) ON DELETE CASCADE
 ) IN {databaseName}.JBJSTTS;
 
 GRANT ALL ON TABLE {tablePrefix}JOBSTATUS TO PUBLIC;
 
 CREATE UNIQUE INDEX JS_INDEX ON
-      {tablePrefix}JOBSTATUS (id)
+      {tablePrefix}JOBSTATUS (jobinstanceid)
       USING STOGROUP {storegroup}
-      PRIQTY 720
-      SECQTY -1
-      BUFFERPOOL {bufferpoolindex};
-
-CREATE AUXILIARY TABLE {tablePrefix}JOBSTATUSBLOB
-       IN {databaseName}.JBJLOBTS
-       STORES {tablePrefix}JOBSTATUS COLUMN obj;
-
-CREATE UNIQUE INDEX JBJLINDX ON {tablePrefix}JOBSTATUSBLOB
-   USING STOGROUP {storegroup}
       PRIQTY 720
       SECQTY -1
       BUFFERPOOL {bufferpoolindex};
