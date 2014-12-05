@@ -1,3 +1,7 @@
+# Breaking change with December 2014 beta update
+
+Old tables (from previous beta versions) will no longer work.  These should be dropped, if necessary, and new tables should be created from the new DDL templates. 
+
 # Java Batch persistence DDL templates
 
 Persistence templates which are **REQUIRED** for using the Java batch function
@@ -20,9 +24,7 @@ Persistence templates which are **REQUIRED** for using the Java batch function
 
 ## Change History
 
-See [ChangeHistory.md](ChangeHistory.md) for details.  
-     
-This is where we would also note when we have made a "breaking" change for which you would need a newer version of the feature code.
+See [ChangeHistory.md](ChangeHistory.md) for details on breaking and non-breaking changes across the various beta levels.
 
 ## References
 

@@ -1,8 +1,14 @@
 # Change History
 
-Note that in delivering the templates separately from the batch feature binaries, and because we are still in beta, there exists a possibility that we introduce a change in the feature code which requires a corresponding change in the persistence tables (which would be described in a newer version of the DDL templates).  
+Note that in delivering the templates separately from the batch feature binaries, and because we are still in beta, there exists an ongoing possibility that we introduce a change in the feature code which requires a corresponding change in the persistence tables (which would be described in a newer version of the DDL templates).  
 
-We will try to avoid this when possible, since it is an extra task to have to go create brand new tables, but we expect to make at least one such change in the course of the beta.
+We will try to avoid this when possible, since it is an extra task to have to go create brand new tables, but we expect to continue to make such changes in the course of the beta.
+
+## Breaking Changes
+
+### 2014-December Beta
+
+[Commit 2033fec27ed72492380c5df8c26267326ae93977](https://github.com/WASdev/sample.batch.templateddls/commit/2033fec27ed72492380c5df8c26267326ae93977)
 
 ## Potentially Breaking Changes
 
