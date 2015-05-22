@@ -1,27 +1,17 @@
 # Getting Started with WebSphere Managed Batch
 
-## Product download links
+## [Beta Downloads](https://developer.ibm.com/wasdev/downloads/liberty-profile-beta)
 
-* [Sept 2014 beta announcement](https://developer.ibm.com/wasdev/2014/09/12/announcing-liberty-profile-september-beta)
-* [Download page](https://developer.ibm.com/wasdev/downloads/liberty-profile-beta)
+## Knowledge Center links
 
-## WLP Beta Knowledge Center links
-
-* [Batch top-level topics list](http://www.ibm.com/support/knowledgecenter/was_beta_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/twlp_container_batch.html)
-* [Known limitations/restrictions] (http://www.ibm.com/support/knowledgecenter/was_beta_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/rwlp_batch_restrict.html)
-
-## WDT Batch Tools Knowledge Center links
-* [Top-level topics list] (http://www.ibm.com/support/knowledgecenter/was_beta_devtools/com.ibm.websphere.wdt.doc/topics/t_container_batch.htm)
-
-## Batch persistence config
-
+* [Batch runtime topics](http://www.ibm.com/support/knowledgecenter/was_beta_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/twlp_container_batch.html)
+* [WDT Batch tools topics](http://www.ibm.com/support/knowledgecenter/was_beta_devtools/com.ibm.websphere.wdt.doc/topics/t_container_batch.htm)
 * [Batch persistence config article](http://www.ibm.com/support/knowledgecenter/was_beta_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/rwlp_batch_persistence_config.html)
-* [DDL Template README](README.md)
 
 ## Samples links
 
 * [sleepybatchlet sample](https://github.com/WASdev/sample.batch.sleepybatchlet) - Our first very simple sample - (Executes a job right within a servlet)
-* [bonuspayout sample](https://github.com/WASdev/sample.batch.bonuspayout) - Our first moderately complicated sample -  (Executes a job using our remote dispatch/management interface, with the **jbatch** utility)
+* [bonuspayout sample](https://github.com/WASdev/sample.batch.bonuspayout) - Our first moderately complicated sample -  (Executes a job using our remote dispatch/management interface, with the **batchManager** command-line utility)
 
 # Common problems
 

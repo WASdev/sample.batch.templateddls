@@ -20,6 +20,19 @@
 -- All Rights Reserved. Licensed Materials - Property of IBM.  
 -----------------------------------------------------------------------
 
+-- 2015-05-22:
+-- 
+-- NOTE:  This no longer maps to the latest version of the runtime.  The tables contained
+-- here will NOT work with recent runtime versions, e.g. the 2015-May beta.   This file
+-- remains for reference since it shows the types of things involved in customizing DB2 z/OS
+-- tables, and as such could still be helpful after generating the basic table definitions
+-- as a starting point.
+--
+-- To generate the latest table definitions, you should use the ddlGen script.
+--
+-- TODO: update the below for the latest table definitions
+-------------------------------------------------------------
+
 -- Tailor these values for your DB2 environment.
 -- Variables ... Use global change on these variable names
 
